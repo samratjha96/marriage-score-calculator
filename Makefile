@@ -6,3 +6,6 @@ format:
 
 run : build
 		./marriage
+
+clean :
+		rm -rf marriage generated.yml
