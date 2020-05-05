@@ -11,8 +11,8 @@ import (
 )
 
 type InitializationConfig struct {
-	Players []string `yaml: "players"`
-	Rounds  int      `yaml: "rounds"`
+	PlayerNames []string `yaml:"players"`
+	RoundNums   int      `yaml:"rounds"`
 }
 
 func ValidateConfigPath(path string) error {
@@ -26,8 +26,8 @@ func ValidateConfigPath(path string) error {
 	return nil
 }
 
-// NewConfig returns a new decoded InitializationConfig struct
-func NewConfig(configPath string) (*InitializationConfig, error) {
+// InitializeConfig returns a new decoded InitializationConfig struct from a yml file
+func InitializeConfig(configPath string) (*InitializationConfig, error) {
 	// Create InitializationConfig structure
 	config := &InitializationConfig{}
 
@@ -104,10 +104,10 @@ type GameConfig struct {
 func (config InitializationConfig) GenerateGameConfig() {
 	var game GameConfig
 	game.Rounds = make([]Round, 0)
-	for i := 0; i < config.Rounds; i++ {
+	for i := 0; i < config.RoundNums; i++ {
 		round := Round{
 			RoundNum: i + 1,
-			Players:  make([]Player, len(config.Players)),
+			Players:  make([]Player, len(config.PlayerNames)),
 		}
 		game.Rounds = append(game.Rounds, round)
 	}
@@ -134,7 +134,7 @@ func main() {
 	// by the user in the flags
 	cfgPath, err := ParseFlags()
 	check(err)
-	cfg, err := NewConfig(cfgPath)
+	cfg, err := InitializeConfig(cfgPath)
 	check(err)
 	cfg.GenerateGameConfig()
 }
