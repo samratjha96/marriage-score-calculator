@@ -102,12 +102,12 @@ type GameConfig struct {
 
 // Turn a InitializationConfig struct to a GameConfig struct
 func (config InitializationConfig) GenerateGameConfig() {
-	var game GameConfig
-	game.Rounds = make([]Round, 0)
+	game := GameConfig{}
+	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
 		round := Round{
 			RoundNum: i + 1,
-			Players:  make([]Player, len(config.PlayerNames)),
+			Players:  PlayerStructGenerate(config.PlayerNames),
 		}
 		game.Rounds = append(game.Rounds, round)
 	}
@@ -115,6 +115,18 @@ func (config InitializationConfig) GenerateGameConfig() {
 	check(err)
 	err = ioutil.WriteFile("generated.yml", d, 0644)
 	check(err)
+}
+
+// Generate []Player struct from player names
+func PlayerStructGenerate(names []string) []Player {
+	playerArray := make([]Player, len(names))
+	for i := 0; i < len(names); i++ {
+		newPlayer := Player{
+			Name: names[i],
+		}
+		playerArray[i] = newPlayer
+	}
+	return playerArray
 }
 
 // Nicely format and print the yaml from the GameConfig struct to the terminal

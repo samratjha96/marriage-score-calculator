@@ -1,73 +1,73 @@
 rounds:
 - roundnum: 1
   players:
-  - name: ""
+  - name: Samrat
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Saurav
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Rashmi
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Sushil
     score: 0
     winner: false
     pachayo: false
 - roundnum: 2
   players:
-  - name: ""
+  - name: Samrat
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Saurav
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Rashmi
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Sushil
     score: 0
     winner: false
     pachayo: false
 - roundnum: 3
   players:
-  - name: ""
+  - name: Samrat
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Saurav
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Rashmi
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Sushil
     score: 0
     winner: false
     pachayo: false
 - roundnum: 4
   players:
-  - name: ""
+  - name: Samrat
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Saurav
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Rashmi
     score: 0
     winner: false
     pachayo: false
-  - name: ""
+  - name: Sushil
     score: 0
     winner: false
     pachayo: false
