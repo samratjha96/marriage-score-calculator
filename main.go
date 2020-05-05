@@ -57,7 +57,7 @@ func ParseFlags() (string, error) {
 
 	// Set up a CLI flag called "-config" to allow users
 	// to supply the configuration file
-	flag.StringVar(&configPath, "config", "./config.yml", "path to config file")
+	flag.StringVar(&configPath, "f", "./config.yml", "path to config file")
 
 	flag.Parse()
 
@@ -101,7 +101,7 @@ type GameConfig struct {
 }
 
 // Turn a InitializationConfig struct to a GameConfig struct
-func (config InitializationConfig) GenerateGameConfig() {
+func GenerateGameConfig(config *InitializationConfig) {
 	game := GameConfig{}
 	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
@@ -148,7 +148,7 @@ func main() {
 	check(err)
 	cfg, err := InitializeConfig(cfgPath)
 	check(err)
-	cfg.GenerateGameConfig()
+	GenerateGameConfig(cfg)
 }
 
 func check(e error) {
