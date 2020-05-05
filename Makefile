@@ -3,3 +3,6 @@ build:
 
 format:
 		@go fmt ./...
+
+run : build
+		./marriage
