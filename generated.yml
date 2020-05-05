@@ -1,0 +1,73 @@
+rounds:
+- roundnum: 1
+  players:
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+- roundnum: 2
+  players:
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+- roundnum: 3
+  players:
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+- roundnum: 4
+  players:
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
+  - name: ""
+    score: 0
+    winner: false
+    pachayo: false
