@@ -8,6 +8,8 @@ import (
 	"os"
 
 	"gopkg.in/yaml.v2"
+
+	"marriage/model"
 )
 
 type InitializationConfig struct {
@@ -86,26 +88,12 @@ func PrettyPrintInitConfig(data []byte) {
 	--------------- Everything related to Game Configuration -------------------------
 */
 
-type Round struct {
-	RoundNum int      `yaml: "round"`
-	Players  []Player `yaml: "players"`
-}
-type Player struct {
-	Name            string `yaml:"name"`
-	Score           int    `yaml:"score"`
-	Winner          bool   `yaml:"winner"`
-	RoundOneCleared bool   `yaml:"pachayo"`
-}
-type GameConfig struct {
-	Rounds []Round `yaml:"rounds"`
-}
-
 // Turn a InitializationConfig struct to a GameConfig struct
 func GenerateGameConfig(config *InitializationConfig) {
-	game := GameConfig{}
+	game := model.GameConfig{}
 	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
-		round := Round{
+		round := model.Round{
 			RoundNum: i + 1,
 			Players:  PlayerStructGenerate(config.PlayerNames),
 		}
@@ -118,10 +106,10 @@ func GenerateGameConfig(config *InitializationConfig) {
 }
 
 // Generate []Player struct from player names
-func PlayerStructGenerate(names []string) []Player {
-	playerArray := make([]Player, len(names))
+func PlayerStructGenerate(names []string) []model.Player {
+	playerArray := make([]model.Player, len(names))
 	for i := 0; i < len(names); i++ {
-		newPlayer := Player{
+		newPlayer := model.Player{
 			Name: names[i],
 		}
 		playerArray[i] = newPlayer
@@ -131,7 +119,7 @@ func PlayerStructGenerate(names []string) []Player {
 
 // Nicely format and print the yaml from the GameConfig struct to the terminal
 func PrettyPrintGameConfig(data []byte) {
-	var config GameConfig
+	var config model.GameConfig
 	err := yaml.Unmarshal(data, &config)
 	check(err)
 	d, err := yaml.Marshal(config)

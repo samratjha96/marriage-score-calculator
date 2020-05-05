@@ -1,5 +1,5 @@
 build:
-		@go build -o marriage ./...
+		@go build -o marriage main.go
 
 format:
 		@go fmt ./...
