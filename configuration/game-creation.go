@@ -1,11 +1,9 @@
 package configuration
 
 import (
-	"io/ioutil"
 	"log"
 	"marriage/model"
-
-	"gopkg.in/yaml.v2"
+	"os"
 )
 
 const defaultOutputFile = "generated.yml"
@@ -17,8 +15,9 @@ func check(e error) {
 }
 
 // Turn a InitializationConfig struct to a GameConfig struct
-func GenerateGameConfig(config *model.InitializationConfig) {
+func GenerateGameConfig(config *model.InitializationConfig) model.GameConfig {
 	game := model.GameConfig{}
+	game.Filename = defaultOutputFile
 	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
 		round := model.Round{
@@ -27,10 +26,11 @@ func GenerateGameConfig(config *model.InitializationConfig) {
 		}
 		game.Rounds = append(game.Rounds, round)
 	}
-	d, err := yaml.Marshal(game)
-	check(err)
-	err = ioutil.WriteFile(defaultOutputFile, d, 0644)
-	check(err)
+	if _, err := os.Stat(defaultOutputFile); err == nil {
+		log.Fatalf("Game in progress. Remove %s before running the program again", defaultOutputFile)
+	}
+	game.ToYaml(defaultOutputFile)
+	return game
 }
 
 // Generate []Player struct from player names

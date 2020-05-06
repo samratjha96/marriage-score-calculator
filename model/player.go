@@ -6,3 +6,7 @@ type Player struct {
 	Winner          bool   `yaml:"winner"`
 	RoundOneCleared bool   `yaml:"pachayo"`
 }
+
+func (p *Player) IsWinner() bool {
+	return p.Winner
+}
