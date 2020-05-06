@@ -21,10 +21,8 @@ func ValidateConfigPath(path string) error {
 
 // Marshals the config.yml or user supplied file into a InitializationConfig struct
 func MarshalConfigFile(configPath string) (*model.InitializationConfig, error) {
-	// Create InitializationConfig structure
 	config := &model.InitializationConfig{}
 
-	// Open config file
 	file, err := os.Open(configPath)
 	if err != nil {
 		return nil, err

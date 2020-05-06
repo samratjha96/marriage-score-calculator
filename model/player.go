@@ -5,6 +5,7 @@ type Player struct {
 	Score           int    `yaml:"score"`
 	Winner          bool   `yaml:"winner"`
 	RoundOneCleared bool   `yaml:"pachayo"`
+	NormalizedScore int    `yaml:"-"`
 }
 
 func (p *Player) IsWinner() bool {
