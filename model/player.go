@@ -7,7 +7,3 @@ type Player struct {
 	RoundOneCleared bool   `yaml:"pachayo"`
 	NormalizedScore int    `yaml:"-"`
 }
-
-func (p *Player) IsWinner() bool {
-	return p.Winner
-}

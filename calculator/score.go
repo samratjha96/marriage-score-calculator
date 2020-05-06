@@ -5,6 +5,7 @@ import (
 	"log"
 	"marriage/model"
 	"os"
+	"sort"
 )
 
 func simpleScoring(player1 *model.Player, player2 *model.Player) {
@@ -70,6 +71,42 @@ func scoreRound(round *model.Round) {
 	}
 }
 
+func aggregateNormalizedScores(rounds []model.Round) map[string]int {
+	aggregatedCounts := make(map[string]int)
+	for i := 0; i < len(rounds); i++ {
+		players := rounds[i].Players
+		for j := 0; j < len(players); j++ {
+			_, ok := aggregatedCounts[players[j].Name]
+			if ok {
+				aggregatedCounts[players[j].Name] += players[j].NormalizedScore
+			} else {
+				aggregatedCounts[players[j].Name] = players[j].NormalizedScore
+			}
+		}
+	}
+	return aggregatedCounts
+}
+
+func printResults(aggregatedCount map[string]int) {
+	type kv struct {
+		Key   string
+		Value int
+	}
+
+	var slices []kv
+	for k, v := range aggregatedCount {
+		slices = append(slices, kv{k, v})
+	}
+
+	sort.Slice(slices, func(i, j int) bool {
+		return slices[i].Value > slices[j].Value
+	})
+
+	for _, kv := range slices {
+		fmt.Printf("%s: %d\n", kv.Key, kv.Value)
+	}
+}
+
 func ScoreGame(filename string) {
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		log.Fatalf("%s is not a valid game.yml file", filename)
@@ -83,10 +120,6 @@ func ScoreGame(filename string) {
 	for i := 0; i < len(rounds); i++ {
 		scoreRound(&rounds[i])
 	}
-	for i := 0; i < len(rounds); i++ {
-		players := rounds[i].Players
-		for j := 0; j < len(players); j++ {
-			fmt.Printf("\n%s normalized score: %d\n", players[j].Name, players[j].NormalizedScore)
-		}
-	}
+	aggregatedCount := aggregateNormalizedScores(rounds)
+	printResults(aggregatedCount)
 }

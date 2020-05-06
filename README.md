@@ -7,3 +7,5 @@ My philosophy is that I will do anything computation in nature manually. But onl
 # TODOS
 - Add cobra as cli tool
 - Figure out where to put all the consts
+- Logic to determine only one winner still doesn't work
+- More tests
