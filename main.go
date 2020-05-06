@@ -5,51 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
+	"marriage/configuration"
+	"marriage/model"
 
 	"gopkg.in/yaml.v2"
-
-	"marriage/model"
 )
 
-type InitializationConfig struct {
-	PlayerNames []string `yaml:"players"`
-	RoundNums   int      `yaml:"rounds"`
-}
-
-func ValidateConfigPath(path string) error {
-	s, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-	if s.IsDir() {
-		return fmt.Errorf("'%s' is a directory, not a normal file", path)
-	}
-	return nil
-}
-
-// InitializeConfig returns a new decoded InitializationConfig struct from a yml file
-func InitializeConfig(configPath string) (*InitializationConfig, error) {
-	// Create InitializationConfig structure
-	config := &InitializationConfig{}
-
-	// Open config file
-	file, err := os.Open(configPath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	// Init new YAML decode
-	d := yaml.NewDecoder(file)
-
-	// Start YAML decoding from file
-	if err := d.Decode(&config); err != nil {
-		return nil, err
-	}
-
-	return config, nil
-}
+const defaultOutputFile = "generated.yml"
+const defaultInputFile = "config.yml"
 
 // ParseFlags will create and parse the CLI flags
 // and return the path to be used elsewhere
@@ -59,12 +22,12 @@ func ParseFlags() (string, error) {
 
 	// Set up a CLI flag called "-config" to allow users
 	// to supply the configuration file
-	flag.StringVar(&configPath, "f", "./config.yml", "path to config file")
+	flag.StringVar(&configPath, "f", defaultInputFile, "path to config file")
 
 	flag.Parse()
 
 	// Validate the path first
-	if err := ValidateConfigPath(configPath); err != nil {
+	if err := configuration.ValidateConfigPath(configPath); err != nil {
 		return "", err
 	}
 
@@ -74,7 +37,7 @@ func ParseFlags() (string, error) {
 
 // Nicely format and print the yaml from the InitializationConfig struct to the terminal
 func PrettyPrintInitConfig(data []byte) {
-	var config InitializationConfig
+	var config model.InitializationConfig
 	err := yaml.Unmarshal(data, &config)
 	check(err)
 	d, err := yaml.Marshal(config)
@@ -89,7 +52,7 @@ func PrettyPrintInitConfig(data []byte) {
 */
 
 // Turn a InitializationConfig struct to a GameConfig struct
-func GenerateGameConfig(config *InitializationConfig) {
+func GenerateGameConfig(config *model.InitializationConfig) {
 	game := model.GameConfig{}
 	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
@@ -101,7 +64,7 @@ func GenerateGameConfig(config *InitializationConfig) {
 	}
 	d, err := yaml.Marshal(game)
 	check(err)
-	err = ioutil.WriteFile("generated.yml", d, 0644)
+	err = ioutil.WriteFile(defaultOutputFile, d, 0644)
 	check(err)
 }
 
@@ -134,7 +97,7 @@ func main() {
 	// by the user in the flags
 	cfgPath, err := ParseFlags()
 	check(err)
-	cfg, err := InitializeConfig(cfgPath)
+	cfg, err := configuration.MarshalConfigFile(cfgPath)
 	check(err)
 	GenerateGameConfig(cfg)
 }
@@ -144,15 +107,3 @@ func check(e error) {
 		log.Fatal(e)
 	}
 }
-
-// func main() {
-// 	data, err := ioutil.ReadFile("game.yml")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	var config GameConfig
-// 	if err := config.Parse(data); err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	PrettyPrint(config)
-// }

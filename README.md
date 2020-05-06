@@ -6,5 +6,3 @@ My philosophy is that I will do anything computation in nature manually. But onl
 
 # TODOS
 - Add cobra as cli tool
-- Modularize project based on config generation and actual game logic
-- Write empty game.yml file based on configuration
