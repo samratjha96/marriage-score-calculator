@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"marriage/model"
+	"os"
 )
 
 func computeDeficit(player1 model.Player, player2 model.Player) int {
@@ -30,8 +31,12 @@ func scoreRound(round model.Round) {
 	}
 }
 
-func ScoreGame(game model.GameConfig) {
-	gameConfig, err := game.FromYaml(game.Filename)
+func ScoreGame(filename string) {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		log.Fatalf("%s is not a valid game.yml file", filename)
+	}
+	game := model.GameConfig{}
+	gameConfig, err := game.FromYaml(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
