@@ -1,3 +1,5 @@
+PHONY: clean
+
 build:
 		@go build -o marriage main.go
 
