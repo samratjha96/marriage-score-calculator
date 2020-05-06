@@ -35,12 +35,9 @@ func GenerateGameConfig(config *model.InitializationConfig) model.GameConfig {
 
 // Generate []Player struct from player names
 func PlayerStructGenerate(names []string) []model.Player {
-	playerArray := make([]model.Player, len(names))
-	for i := 0; i < len(names); i++ {
-		newPlayer := model.Player{
-			Name: names[i],
-		}
-		playerArray[i] = newPlayer
+	playerArray := make([]model.Player, 0)
+	for i := range names {
+		playerArray = append(playerArray, model.Player{Name: names[i]})
 	}
 	return playerArray
 }
