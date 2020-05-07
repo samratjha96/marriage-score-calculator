@@ -6,7 +6,9 @@ import (
 	"marriage/model"
 	"os"
 	"sort"
+	"strconv"
 
+	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -69,11 +71,15 @@ func validateWinnerInRound(round *model.Round) error {
 // But this function provides that safety anyway in case they mistakenly forgot to
 func zeroOutNonRoundOneCleared(round *model.Round) error {
 	players := round.Players
+	nonClearedPlayers := make([]string, 0)
 	for i := 0; i < len(players); i++ {
-		if !players[i].RoundOneCleared {
-			fmt.Printf("Zeroed out score for %s in round %d as they didn't show 3 sequences\n", players[i].Name, round.RoundNum)
-			players[i].Score = 0
+		if !players[i].RoundOneCleared && !players[i].Winner {
+			nonClearedPlayers = append(nonClearedPlayers, players[i].Name)
+			(&players[i]).Score = 0
 		}
+	}
+	if len(nonClearedPlayers) > 0 {
+		fmt.Printf("Zeroed out score for %v in round %v as they didn't show 3 sequences\n", nonClearedPlayers, round.RoundNum)
 	}
 	return nil
 }
@@ -139,7 +145,6 @@ func aggregateNormalizedScores(rounds []model.Round) map[string]int {
 }
 
 func printResults(aggregatedCount map[string]int) {
-	fmt.Println("------------------- Final Scores ------------------------")
 	type kv struct {
 		Key   string
 		Value int
@@ -154,7 +159,10 @@ func printResults(aggregatedCount map[string]int) {
 		return slices[i].Value > slices[j].Value
 	})
 
+	table := tablewriter.NewWriter(os.Stdout)
 	for _, kv := range slices {
-		fmt.Printf("%s: %d\n", kv.Key, kv.Value)
+		table.SetHeader([]string{"Name", "Score"})
+		table.Append([]string{kv.Key, strconv.Itoa(kv.Value)})
 	}
+	table.Render()
 }
