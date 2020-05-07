@@ -6,8 +6,6 @@ import (
 	"os"
 )
 
-const defaultOutputFile = "generated.yml"
-
 func check(e error) {
 	if e != nil {
 		log.Fatal(e)
@@ -15,9 +13,9 @@ func check(e error) {
 }
 
 // Turn a InitializationConfig struct to a GameConfig struct
-func GenerateGameConfig(config *model.InitializationConfig) model.GameConfig {
+func GenerateGameConfig(config *model.InitializationConfig, outFilePath string) model.GameConfig {
 	game := model.GameConfig{}
-	game.Filename = defaultOutputFile
+	game.Filename = outFilePath
 	// Create all the rounds
 	for i := 0; i < config.RoundNums; i++ {
 		round := model.Round{
@@ -26,10 +24,10 @@ func GenerateGameConfig(config *model.InitializationConfig) model.GameConfig {
 		}
 		game.Rounds = append(game.Rounds, round)
 	}
-	if _, err := os.Stat(defaultOutputFile); err == nil {
-		log.Fatalf("Game in progress. Remove %s before running the program again", defaultOutputFile)
+	if _, err := os.Stat(outFilePath); err == nil {
+		log.Fatalf("Game in progress. Remove %s before running the program again", outFilePath)
 	}
-	game.ToYaml(defaultOutputFile)
+	game.ToYaml(outFilePath)
 	return game
 }
 

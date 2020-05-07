@@ -1,16 +1,14 @@
 PHONY: clean
 
-build:
-	@go build -o marriage main.go
+install:
+	@go install
 
 format:
 	@go fmt ./...
 
-run : build
-	./marriage
+run : install
+	marriage
 
 clean :
-	rm -rf marriage generated.yml
+	rm -rf marriage game.yml
 
-score : build
-	./marriage -score
