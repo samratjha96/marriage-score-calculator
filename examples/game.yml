@@ -1,0 +1,19 @@
+rounds:
+- roundnum: 1
+  players:
+  - name: Goku
+    score: 0
+    winner: false
+    pachayo: false
+  - name: Vegeta
+    score: 0
+    winner: false
+    pachayo: false
+  - name: Gohan
+    score: 0
+    winner: false
+    pachayo: false
+  - name: Trunks
+    score: 0
+    winner: false
+    pachayo: false
