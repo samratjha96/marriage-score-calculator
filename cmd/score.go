@@ -160,9 +160,21 @@ func printResults(aggregatedCount map[string]int) {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	for _, kv := range slices {
-		table.SetHeader([]string{"Name", "Score"})
-		table.Append([]string{kv.Key, strconv.Itoa(kv.Value)})
+	table.SetHeader([]string{"Name", "Score"})
+	table.SetHeaderAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetHeaderColor(tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
+		tablewriter.Colors{tablewriter.Bold, tablewriter.FgHiRedColor})
+
+	for i, kv := range slices {
+		if i == 0 {
+			table.Rich([]string{kv.Key, strconv.Itoa(kv.Value)}, []tablewriter.Colors{
+				tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
+				tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
+			})
+		} else {
+			table.Append([]string{kv.Key, strconv.Itoa(kv.Value)})
+		}
 	}
 	table.Render()
 }
