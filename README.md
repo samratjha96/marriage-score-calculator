@@ -7,7 +7,7 @@ I will only do something manually once. The second time I need a program. Here's
 This is my very first Golang project so the code is probably not very idiomatic. I am looking to improve it as much as possible so if by some chance you find yourself here, do take a look at the code and suggest improvements I can make
 
 # Install
-Simply download the relevant binary from the `Releases` tab for your operating system
+Simply download the relevant binary from the `Releases` tab for your operating system and rename the file to just `marriage`
 
 # Sample usage
 Naviate to the [examples](./examples) directory. Let's consider the following example `config.yml` file:
