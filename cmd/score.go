@@ -22,7 +22,7 @@ var scoreCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(scoreCmd)
-	scoreCmd.Flags().StringVarP(&ScoreFile, "score", "s", defaultGameFile, "yml file representing the game")
+	scoreCmd.Flags().StringVarP(&ScoreFile, "game", "g", defaultGameFile, "yml file representing the game")
 }
 
 func ScoreGame(filename string) {
@@ -36,24 +36,51 @@ func ScoreGame(filename string) {
 	}
 	rounds := gameConfig.Rounds
 	for i := 0; i < len(rounds); i++ {
+		validateWinnerInRound(&rounds[i])
+		zeroOutNonRoundOneCleared(&rounds[i])
 		scoreRound(&rounds[i])
 	}
 	aggregatedCount := aggregateNormalizedScores(rounds)
 	printResults(aggregatedCount)
 }
 
+// Every round must contain only one winner. Otherwise the configuration is invalid and we exit
+func validateWinnerInRound(round *model.Round) error {
+	winner := 0
+	players := round.Players
+	for i := 0; i < len(players); i++ {
+		if players[i].Winner {
+			winner += 1
+		}
+		if winner > 1 {
+			break
+		}
+	}
+	if winner == 0 {
+		log.Fatalf("No winner found for round %d\n", round.RoundNum)
+	} else if winner != 1 {
+		log.Fatalf("More than one winner found for round %d\n", round.RoundNum)
+	}
+	return nil
+}
+
+// If a player has not shown 3 sequences when the round ends, the game rules state that they earned 0 points for the round
+// Ideally the score keeper would not have put in any points for a player that did not clear the first round
+// But this function provides that safety anyway in case they mistakenly forgot to
+func zeroOutNonRoundOneCleared(round *model.Round) error {
+	players := round.Players
+	for i := 0; i < len(players); i++ {
+		if !players[i].RoundOneCleared {
+			fmt.Printf("Zeroed out score for %s in round %d as they didn't show 3 sequences\n", players[i].Name, round.RoundNum)
+			players[i].Score = 0
+		}
+	}
+	return nil
+}
+
 func scoreRound(round *model.Round) {
 	players := round.Players
-	winner := ""
 	for i := 0; i < len(players); i++ {
-		// If some player has already been identified as a winner in this round, unless that winner if players[i] itself
-		// then we have found an extra winner and we should fail
-		if players[i].Winner {
-			if winner != "" && winner != players[i].Name {
-				log.Fatalf("There should only be one winner per round. Found many winners in round %d", round.RoundNum)
-			}
-			winner = players[i].Name
-		}
 		for j := i + 1; j < len(round.Players); j++ {
 			if i == j {
 				continue
@@ -61,23 +88,12 @@ func scoreRound(round *model.Round) {
 			if players[i].Name == players[j].Name {
 				log.Fatal("Comparing two players with same name")
 			}
-			// If some player has already been identified as a winner in this round, unless that winner if players[j] itself
-			// then we have found an extra winner and we should fail
-			if players[j].Winner {
-				if winner != "" && winner != players[i].Name {
-					log.Fatalf("There should only be one winner per round. Found many winners in round %d", round.RoundNum)
-				}
-				winner = players[j].Name
-			}
 			fullNormalizedScore(&players[i], &players[j])
 		}
 	}
-	// If no winner was identified then we need to alert the user
-	if winner == "" {
-		log.Fatalf("There should at least be one winner in round %d", round.RoundNum)
-	}
 }
 
+// Simply compute the difference in two player's raw score
 func simpleScoring(player1 *model.Player, player2 *model.Player) {
 	if player1.Score > player2.Score {
 		deficit := player1.Score - player2.Score
@@ -86,6 +102,7 @@ func simpleScoring(player1 *model.Player, player2 *model.Player) {
 	}
 }
 
+// Factor in the winner's multiplier in the normalized score
 func winnerScoring(player1 *model.Player, player2 *model.Player) {
 	if player1.Winner {
 		if player2.RoundOneCleared {
@@ -122,6 +139,7 @@ func aggregateNormalizedScores(rounds []model.Round) map[string]int {
 }
 
 func printResults(aggregatedCount map[string]int) {
+	fmt.Println("------------------- Final Scores ------------------------")
 	type kv struct {
 		Key   string
 		Value int

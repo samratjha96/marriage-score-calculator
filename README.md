@@ -5,7 +5,6 @@ My philosophy is that I will do anything computation in nature manually. But onl
 
 
 # TODOS
-- Add cobra as cli tool. Support -f for input file and -o for output file. Make score a subcommand that takes in it's own -f flag
 - Figure out where to put all the consts
 - Logic to determine only one winner still doesn't work
 - More tests
