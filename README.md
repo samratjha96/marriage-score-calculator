@@ -49,6 +49,7 @@ This is the game configuration file that will be used to keep score. However you
 
 If a player has not completed the primary round, mark the `pachayo` key as false for that player for that round. Mark `winner: true` for the player that won the round. That will be sufficient to handle the enforced scoring rule. You can choose to compute the `score` field however you want besides that
 
+## Scoring the game
 To score the game, simply run:
 ```bash
 marriage score
@@ -65,7 +66,3 @@ You will see an output like this:
 
 Goku won. He always does
 
-# TODOS
-- Figure out where to put all the consts
-- Logic to determine only one winner still doesn't work
-- More tests

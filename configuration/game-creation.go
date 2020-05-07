@@ -12,7 +12,7 @@ func check(e error) {
 	}
 }
 
-// Turn a InitializationConfig struct to a GameConfig struct
+// Generate a game configuration yaml file from the initial configuration yaml file
 func GenerateGameConfig(config *model.InitializationConfig, outFilePath string) model.GameConfig {
 	game := model.GameConfig{}
 	game.Filename = outFilePath
@@ -31,11 +31,11 @@ func GenerateGameConfig(config *model.InitializationConfig, outFilePath string) 
 	return game
 }
 
-// Generate []Player struct from player names
+// Generate []Player struct from slices of player names
 func PlayerStructGenerate(names []string) []model.Player {
-	playerArray := make([]model.Player, 0)
+	playerSlices := make([]model.Player, 0)
 	for i := range names {
-		playerArray = append(playerArray, model.Player{Name: names[i]})
+		playerSlices = append(playerSlices, model.Player{Name: names[i]})
 	}
-	return playerArray
+	return playerSlices
 }
