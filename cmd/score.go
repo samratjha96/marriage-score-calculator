@@ -1,4 +1,4 @@
-package calculator
+package cmd
 
 import (
 	"fmt"
@@ -6,33 +6,40 @@ import (
 	"marriage/model"
 	"os"
 	"sort"
+
+	"github.com/spf13/cobra"
 )
 
-func simpleScoring(player1 *model.Player, player2 *model.Player) {
-	if player1.Score > player2.Score {
-		deficit := player1.Score - player2.Score
-		player1.NormalizedScore += deficit
-		player2.NormalizedScore -= deficit
-	}
+var ScoreFile string
+
+var scoreCmd = &cobra.Command{
+	Use:   "score",
+	Short: "Score the game",
+	Run: func(cmd *cobra.Command, args []string) {
+		ScoreGame(ScoreFile)
+	},
 }
 
-func winnerScoring(player1 *model.Player, player2 *model.Player) {
-	if player1.Winner {
-		if player2.RoundOneCleared {
-			player1.NormalizedScore += 3
-			player2.NormalizedScore -= 3
-		} else {
-			player1.NormalizedScore += 10
-			player2.NormalizedScore -= 10
-		}
-	}
+func init() {
+	rootCmd.AddCommand(scoreCmd)
+	scoreCmd.Flags().StringVarP(&ScoreFile, "score", "s", defaultGameFile, "yml file representing the game")
 }
 
-func fullNormalizedScore(player1 *model.Player, player2 *model.Player) {
-	simpleScoring(player1, player2)
-	simpleScoring(player2, player1)
-	winnerScoring(player1, player2)
-	winnerScoring(player2, player1)
+func ScoreGame(filename string) {
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		log.Fatalf("%s does not exist. Please create a valid game.yml file", filename)
+	}
+	game := model.GameConfig{}
+	gameConfig, err := game.FromYaml(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	rounds := gameConfig.Rounds
+	for i := 0; i < len(rounds); i++ {
+		scoreRound(&rounds[i])
+	}
+	aggregatedCount := aggregateNormalizedScores(rounds)
+	printResults(aggregatedCount)
 }
 
 func scoreRound(round *model.Round) {
@@ -71,6 +78,33 @@ func scoreRound(round *model.Round) {
 	}
 }
 
+func simpleScoring(player1 *model.Player, player2 *model.Player) {
+	if player1.Score > player2.Score {
+		deficit := player1.Score - player2.Score
+		player1.NormalizedScore += deficit
+		player2.NormalizedScore -= deficit
+	}
+}
+
+func winnerScoring(player1 *model.Player, player2 *model.Player) {
+	if player1.Winner {
+		if player2.RoundOneCleared {
+			player1.NormalizedScore += 3
+			player2.NormalizedScore -= 3
+		} else {
+			player1.NormalizedScore += 10
+			player2.NormalizedScore -= 10
+		}
+	}
+}
+
+func fullNormalizedScore(player1 *model.Player, player2 *model.Player) {
+	simpleScoring(player1, player2)
+	simpleScoring(player2, player1)
+	winnerScoring(player1, player2)
+	winnerScoring(player2, player1)
+}
+
 func aggregateNormalizedScores(rounds []model.Round) map[string]int {
 	aggregatedCounts := make(map[string]int)
 	for i := 0; i < len(rounds); i++ {
@@ -105,21 +139,4 @@ func printResults(aggregatedCount map[string]int) {
 	for _, kv := range slices {
 		fmt.Printf("%s: %d\n", kv.Key, kv.Value)
 	}
-}
-
-func ScoreGame(filename string) {
-	if _, err := os.Stat(filename); os.IsNotExist(err) {
-		log.Fatalf("%s is not a valid game.yml file", filename)
-	}
-	game := model.GameConfig{}
-	gameConfig, err := game.FromYaml(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	rounds := gameConfig.Rounds
-	for i := 0; i < len(rounds); i++ {
-		scoreRound(&rounds[i])
-	}
-	aggregatedCount := aggregateNormalizedScores(rounds)
-	printResults(aggregatedCount)
 }

@@ -23,8 +23,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Config string
-var Out string
+const defaultConfigFile = "config.yml"
+const defaultGameFile = "game.yml"
+
+var ConfigFile string
+var GameFile string
 
 // startCmd represents the start command
 var startCmd = &cobra.Command{
@@ -38,7 +41,7 @@ by the config file
 
 Use the game.yml file to track the scoring throughout the rounds.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		generateGame(Config)
+		generateGame(ConfigFile)
 	},
 }
 
@@ -50,12 +53,12 @@ func generateGame(configFilePath string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	game := configuration.GenerateGameConfig(cfg, Out)
+	game := configuration.GenerateGameConfig(cfg, GameFile)
 	fmt.Printf("Game file: %s successfully created\n", game.Filename)
 }
 
 func init() {
 	rootCmd.AddCommand(startCmd)
-	startCmd.Flags().StringVarP(&Config, "file", "f", "config.yml", "Initial configuration file")
-	startCmd.Flags().StringVarP(&Out, "out", "o", "game.yml", "Generated yml file representing game configuration")
+	startCmd.Flags().StringVarP(&ConfigFile, "file", "f", "config.yml", "Initial configuration file")
+	startCmd.Flags().StringVarP(&GameFile, "out", "o", "game.yml", "Generated yml file representing game configuration")
 }
