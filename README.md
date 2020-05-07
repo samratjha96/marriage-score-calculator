@@ -60,7 +60,10 @@ marriage score -g <other_file>.yml
 if using some other game yml file besides the default `game.yml` file
 
 You will see an output like this:
-<img src="assets/gameResults.jp">
+
+<img src="assets/sample_scoring.png">
+
+Goku won. He always does
 
 # TODOS
 - Figure out where to put all the consts
