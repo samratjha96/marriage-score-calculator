@@ -3,7 +3,7 @@ rounds:
   players:
   - name: Goku
     score: 0
-    winner: false
+    winner: true
     pachayo: false
   - name: Vegeta
     score: 0

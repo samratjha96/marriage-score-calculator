@@ -73,13 +73,13 @@ func zeroOutNonRoundOneCleared(round *model.Round) error {
 	players := round.Players
 	nonClearedPlayers := make([]string, 0)
 	for i := 0; i < len(players); i++ {
-		if !players[i].RoundOneCleared && !players[i].Winner {
+		if !players[i].RoundOneCleared && !players[i].Winner && players[i].Score != 0 {
 			nonClearedPlayers = append(nonClearedPlayers, players[i].Name)
 			(&players[i]).Score = 0
 		}
 	}
 	if len(nonClearedPlayers) > 0 {
-		fmt.Printf("Zeroed out score for %v in round %v as they didn't show 3 sequences\n", nonClearedPlayers, round.RoundNum)
+		fmt.Printf("Zeroed out score for %v in round %v as they didn't clear the primary round\n", nonClearedPlayers, round.RoundNum)
 	}
 	return nil
 }
