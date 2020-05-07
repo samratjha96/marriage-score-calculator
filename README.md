@@ -1,4 +1,4 @@
-# Marriage Card Game Score Calculator
+# Marriage Score Calculator
 My family loves playing the [Marriage Card Game](https://en.wikipedia.org/wiki/Marriage_(card_game)) but we hate having to keep track of the weird scoring system and determining who won at the end of the game
 
 I will only do something manually once. The second time I need a program. Here's the program to handle that and let us focus on purely playing the game and leave the scoring to the dumb machine
@@ -10,7 +10,7 @@ This is my very first Golang project so the code is probably not very idiomatic.
 Simply download the relevant binary from the `Releases` tab for your operating system
 
 # Sample usage
-Naviate the [examples](./examples) directory to see examples. Let's consider the following example `config.yml` file:
+Naviate to the [examples](./examples) directory. Let's consider the following example `config.yml` file:
 
 ```yaml
 players:
@@ -20,8 +20,7 @@ players:
   - Trunks
 rounds: 1
 ```
-This is the bare minimum a configuration file needs. Running `marriage start -f config.yml` will yield a `game.yml` file that looks like:
-
+Run `marriage start` to generate the following `game.yml` file:
 ```yaml
 rounds:
 - roundnum: 1
@@ -65,4 +64,23 @@ You will see an output like this:
 <img src="assets/sample_scoring.png">
 
 Goku won. He always does
+
+# Features
+*You can always run `marriage -h` or `marriage <subcommand> -h` to see the help options in the tool*
+
+If you choose to use your differently named `config.yml` file, you can run:
+```bash
+marriage start -f [--file] <custom_file>.yml
+```
+to generate the `game.yml` file
+
+If you want to save the `game.yml` file as something else (maybe you don't want to overwrite a previous `game.yml` file), you can run:
+```bash
+marriage start -o [--out] <custom_out>.yml
+```
+
+If you then want to score this game file instead, you can run:
+```bash
+marriage score -g [--game] <custom_out>.yml
+```
 
