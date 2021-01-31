@@ -10,7 +10,7 @@ This is my very first Golang project so the code is probably not very idiomatic.
 Simply download the relevant binary from the `Releases` tab for your operating system and rename the file to just `marriage`
 
 # Sample usage
-Naviate to the [examples](./examples) directory. Let's consider the following example `config.yml` file:
+Navigate to the [examples](./examples) directory. Let's consider the following example `config.yml` file:
 
 ```yaml
 players:
